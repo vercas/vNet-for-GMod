@@ -1,4 +1,4 @@
---[[	vNet 1.1.5
+--[[	vNet 1.1.6
 
 	Copyright 2014 Alexandru-Mihai Maftei
 			   aka Vercas
@@ -29,13 +29,15 @@
 		-	Alex Grist											Beta tester; reported several major bugs.
 		-	Rusketh												Beta tester; pointed out issue with sending entities; 
 																suggested check for networked strings when writing to
-																buffers; Suggested 'Broadcast' function for outgoing packets.
+																buffers; Suggested 'Broadcast' function for outgoing packets;
+																Reported network string case insensitivity issue.
 
 		-	People who contributed on the GitHub repository by reporting bugs, posting fixes, etc.
 
 -----------------------------------------------------------------------------------------------------------------------------
 	
-	Nothing new here as far as the GitHub users are concerned.
+	New in this version:
+	-	Apparently util.NetworkStringToID performs a case-insensitive search. This is fixed.
 --]]
 
 
@@ -1148,7 +1150,11 @@ function WritePacketIndex:String(val)
 
 	local nid = util.NetworkStringToID(val)
 
-	if nid and nid > 0 then
+	if nid and (nid <= 0 or util.NetworkIDToString(nid) ~= val) then
+		nid = nil
+	end
+
+	if nid then
 		self.File:WriteLong(-nid)
 	else
 		self.File:WriteLong(#val)
@@ -1784,6 +1790,10 @@ writevar = function(v, f, d)
 				f:WriteByte(TABLE_TYPE_STRING_EMPTY)
 			else
 				local nid = util.NetworkStringToID(v)
+
+				if nid and (nid <= 0 or util.NetworkIDToString(nid) ~= v) then
+					nid = nil
+				end
 
 				if nid and nid > 0 then
 					f:WriteByte(TABLE_TYPE_STRING_NETWORKED)
