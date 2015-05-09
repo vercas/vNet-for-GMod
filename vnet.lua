@@ -1,4 +1,4 @@
---[[	vNet 1.1.7
+--[[	vNet 1.1.8
 
 	Copyright 2014 Alexandru-Mihai Maftei
 			   aka Vercas
@@ -37,7 +37,7 @@
 -----------------------------------------------------------------------------------------------------------------------------
 	
 	New in this version:
-	-	Old packets are deleted properly on startup now.
+	-	I haven't touched GMod in some time...
 --]]
 
 
@@ -76,7 +76,7 @@ if file.IsDir("vnet", "DATA") then
 	local files, dirs = file.Find("vnet/*", "DATA")
 
 	for i = 1, #files do
-		file.Remove("vnet/" .. files[i])
+		file.Delete("vnet/" .. files[i])
 	end
 else
 	file.CreateDir("vnet")
