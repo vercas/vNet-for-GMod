@@ -1,4 +1,4 @@
---[[	vNet 1.1.6
+--[[	vNet 1.1.7
 
 	Copyright 2014 Alexandru-Mihai Maftei
 			   aka Vercas
@@ -37,7 +37,7 @@
 -----------------------------------------------------------------------------------------------------------------------------
 	
 	New in this version:
-	-	Apparently util.NetworkStringToID performs a case-insensitive search. This is fixed.
+	-	Old packets are deleted properly on startup now.
 --]]
 
 
@@ -73,10 +73,14 @@ file.Append("vnetlog.txt", "\n\n------------------------------------------------
 
 
 if file.IsDir("vnet", "DATA") then
-	file.Delete("vnet")
-end
+	local files, dirs = file.Find("vnet/*", "DATA")
 
-file.CreateDir("vnet")
+	for i = 1, #files do
+		file.Remove("vnet/" .. files[i])
+	end
+else
+	file.CreateDir("vnet")
+end
 
 local function getFile()
 	while true do
