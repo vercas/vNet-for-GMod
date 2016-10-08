@@ -1,4 +1,4 @@
---[[	vNet 1.1.8
+--[[	vNet 1.1.9
 
 	Copyright 2014 Alexandru-Mihai Maftei
 			   aka Vercas
@@ -31,6 +31,8 @@
 																suggested check for networked strings when writing to
 																buffers; Suggested 'Broadcast' function for outgoing packets;
 																Reported network string case insensitivity issue.
+		-	Kamshak												Inquired about sending and receiving whole strings, which
+																lead to finding a missing argument in the callback.
 
 		-	People who contributed on the GitHub repository by reporting bugs, posting fixes, etc.
 
@@ -1605,7 +1607,7 @@ hook.Add("Think", "vNet Postage", function()
 
 		if callbacks[typ] then
 			if callbacks[typ][2] then
-				callbacks[typ][1](pck.Data)
+				callbacks[typ][1](pck.Data, pck.Nodes)
 			else
 				pck = createReadPacket(pck)
 
